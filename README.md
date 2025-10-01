@@ -3,7 +3,7 @@
 <div align="center">
 
 ![JavaEE](https://img.shields.io/badge/JavaEE-8-blue?style=for-the-badge&logo=java)
-![PrimeFaces](https://img.shields.io/badge/PrimeFaces-12.0-green?style=for-the-badge)
+![PrimeFaces](https://img.shields.io/badge/PrimeFaces-15.0.8-green?style=for-the-badge)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-336791?style=for-the-badge&logo=postgresql)
 ![WildFly](https://img.shields.io/badge/WildFly-26+-red?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
