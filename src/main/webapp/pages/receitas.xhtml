@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="title">Receitas Médicas</ui:define>
+
+    <ui:define name="content">
+        <h:form id="formReceitas">
+            <p:panel header="Gerenciamento de Receitas">
+                <div class="p-mb-3">
+                    <p:commandButton value="Nova Receita"
+                                     icon="pi pi-plus"
+                                     styleClass="ui-button-success"
+                                     action="#{receitaBean.novo}"
+                                     oncomplete="PF('dlgReceita').show()"/>
+                </div>
+
+                <p:dataTable id="tabelaReceitas"
+                             value="#{receitaBean.lazyModel}"
+                             var="receita"
+                             lazy="true"
+                             paginator="true"
+                             rows="10"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15,20"
+                             emptyMessage="Nenhuma receita encontrada"
+                             styleClass="table-responsive">
+
+                    <p:column headerText="Data" style="width: 120px">
+                        <h:outputText value="#{receita.dataPrescricao}">
+                            <f:converter converterId="localDateConverter"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Paciente">
+                        <h:outputText value="#{receita.paciente.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="CPF Paciente" style="width: 150px">
+                        <h:outputText value="#{receita.paciente.cpf}">
+                            <f:converter converterId="cpfConverter"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Qtd. Medicamentos" style="width: 150px; text-align: center">
+                        <h:outputText value="#{receita.medicamentosReceitados.size()}"/>
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width: 100px; text-align: center">
+                        <p:commandButton icon="pi pi-eye"
+                                         styleClass="ui-button-info p-mr-2"
+                                         title="Visualizar"
+                                         action="#{receitaBean.visualizar(receita)}"
+                                         process="@this"
+                                         update=":formReceitas:dlgDetalhesContent"
+                                         oncomplete="PF('dlgDetalhes').show()"/>
+
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="ui-button-danger"
+                                         title="Excluir"
+                                         process="@this"
+                                         oncomplete="PF('confirmDelete').show()">
+                            <f:setPropertyActionListener target="#{receitaBean.receitaSelecionada}" value="#{receita}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+
+            <p:dialog header="Nova Receita Médica"
+                      widgetVar="dlgReceita"
+                      modal="true"
+                      responsive="true"
+                      width="900"
+                      height="600">
+                <p:outputPanel id="dlgReceitaContent">
+                    <div class="p-fluid">
+                        <div class="p-field">
+                            <p:outputLabel for="paciente" value="Paciente:"/>
+                            <p:selectOneMenu id="paciente"
+                                             value="#{receitaBean.receita.paciente}"
+                                             converter="omnifaces.SelectItemsConverter"
+                                             required="true"
+                                             filter="true"
+                                             filterMatchMode="contains">
+                                <f:selectItem itemLabel="Selecione..." noSelectionOption="true"/>
+                                <f:selectItems value="#{receitaBean.pacientes}"
+                                               var="p"
+                                               itemValue="#{p}"
+                                               itemLabel="#{p.nome} - #{p.cpf}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <p:divider/>
+
+                        <h4>Adicionar Medicamento</h4>
+
+                        <div class="p-formgrid p-grid">
+                            <div class="p-field p-col-12 p-md-6">
+                                <p:outputLabel for="medicamento" value="Medicamento:"/>
+                                <p:selectOneMenu id="medicamento"
+                                                 value="#{receitaBean.medicamentoSelecionado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 filter="true"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Selecione..." noSelectionOption="true"/>
+                                    <f:selectItems value="#{receitaBean.medicamentos}"
+                                                   var="m"
+                                                   itemValue="#{m}"
+                                                   itemLabel="#{m.nome}"/>
+                                </p:selectOneMenu>
+                            </div>
+
+                            <div class="p-field p-col-12 p-md-6">
+                                <p:outputLabel for="posologia" value="Posologia:"/>
+                                <p:inputText id="posologia"
+                                             value="#{receitaBean.medicamentoReceitado.posologia}"
+                                             placeholder="Ex: 1 comprimido a cada 8 horas"/>
+                            </div>
+                        </div>
+
+                        <p:commandButton value="Adicionar Medicamento"
+                                         icon="pi pi-plus"
+                                         action="#{receitaBean.adicionarMedicamento}"
+                                         process="@this paciente medicamento posologia"
+                                         update="medicamento posologia tabelaMedicamentosReceita messages"
+                                         styleClass="ui-button-success p-mb-3"/>
+
+                        <p:dataTable id="tabelaMedicamentosReceita"
+                                     value="#{receitaBean.receita.medicamentosReceitados}"
+                                     var="mr"
+                                     emptyMessage="Nenhum medicamento adicionado"
+                                     styleClass="p-mt-3">
+                            <p:column headerText="Medicamento">
+                                <h:outputText value="#{mr.medicamento.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="Posologia">
+                                <h:outputText value="#{mr.posologia}"/>
+                            </p:column>
+
+                            <p:column headerText="Remover" style="width: 100px; text-align: center">
+                                <p:commandButton icon="pi pi-trash"
+                                                 styleClass="ui-button-danger"
+                                                 action="#{receitaBean.removerMedicamento(mr)}"
+                                                 process="@this"
+                                                 update="tabelaMedicamentosReceita messages"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <div class="p-dialog-footer">
+                        <p:commandButton value="Cancelar"
+                                         icon="pi pi-times"
+                                         onclick="PF('dlgReceita').hide()"
+                                         styleClass="ui-button-secondary"
+                                         type="button"/>
+                        <p:commandButton value="Salvar Receita"
+                                         icon="pi pi-check"
+                                         action="#{receitaBean.salvar}"
+                                         process="@this paciente"
+                                         update=":formReceitas:tabelaReceitas messages"
+                                         oncomplete="if(!args.validationFailed) PF('dlgReceita').hide()"/>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog header="Detalhes da Receita"
+                      widgetVar="dlgDetalhes"
+                      modal="true"
+                      responsive="true"
+                      width="700">
+                <p:outputPanel id="dlgDetalhesContent">
+                    <div class="receita-detalhes">
+                        <h:panelGrid columns="2" styleClass="detail-grid">
+                            <h:outputText value="Data:" styleClass="label"/>
+                            <h:outputText value="#{receitaBean.receitaSelecionada.dataPrescricao}">
+                                <f:converter converterId="localDateConverter"/>
+                            </h:outputText>
+
+                            <h:outputText value="Paciente:" styleClass="label"/>
+                            <h:outputText value="#{receitaBean.receitaSelecionada.paciente.nome}"/>
+
+                            <h:outputText value="CPF:" styleClass="label"/>
+                            <h:outputText value="#{receitaBean.receitaSelecionada.paciente.cpf}">
+                                <f:converter converterId="cpfConverter"/>
+                            </h:outputText>
+                        </h:panelGrid>
+
+                        <p:divider/>
+
+                        <h4>Medicamentos Prescritos</h4>
+
+                        <p:dataTable value="#{receitaBean.receitaSelecionada.medicamentosReceitados}"
+                                     var="mr"
+                                     styleClass="p-mt-2">
+                            <p:column headerText="Medicamento">
+                                <h:outputText value="#{mr.medicamento.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="Posologia">
+                                <h:outputText value="#{mr.posologia}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="confirmDelete"
+                             header="Confirmação"
+                             message="Deseja realmente excluir esta receita?"
+                             icon="pi pi-exclamation-triangle">
+                <p:commandButton value="Sim"
+                                 icon="pi pi-check"
+                                 action="#{receitaBean.excluir}"
+                                 update="tabelaReceitas messages"
+                                 oncomplete="PF('confirmDelete').hide()"/>
+                <p:commandButton value="Não"
+                                 icon="pi pi-times"
+                                 onclick="PF('confirmDelete').hide()"
+                                 type="button"
+                                 styleClass="ui-button-secondary"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="title">Relatórios</ui:define>
+
+    <ui:define name="content">
+        <h:form id="formRelatorios">
+            <div class="export-buttons p-mb-3">
+                <p:commandButton value="Exportar Excel"
+                                 icon="pi pi-file-excel"
+                                 styleClass="ui-button-success p-mr-2"
+                                 ajax="false"
+                                 action="#{relatorioBean.exportarExcel}"/>
+
+                <p:commandButton value="Exportar PDF"
+                                 icon="pi pi-file-pdf"
+                                 styleClass="ui-button-danger"
+                                 ajax="false"
+                                 action="#{relatorioBean.exportarPDF}"/>
+            </div>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                    <p:panel header="Top 2 - Medicamentos Mais Prescritos" styleClass="panel-highlight">
+                        <p:dataTable value="#{relatorioBean.medicamentosMaisPrescritos}"
+                                     var="item"
+                                     emptyMessage="Nenhum dado disponível">
+                            <p:column headerText="#" style="width: 60px; text-align: center">
+                                <h:outputText value="#{relatorioBean.medicamentosMaisPrescritos.indexOf(item) + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="Medicamento">
+                                <h:outputText value="#{item[0]}" styleClass="font-bold"/>
+                            </p:column>
+
+                            <p:column headerText="Total" style="width: 100px; text-align: center">
+                                <p:badge value="#{item[1]}" severity="success" size="large"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </div>
+
+                <div class="p-col-12 p-md-6">
+                    <p:panel header="Top 2 - Pacientes com Mais Medicamentos" styleClass="panel-highlight">
+                        <p:dataTable value="#{relatorioBean.pacientesComMaisMedicamentos}"
+                                     var="item"
+                                     emptyMessage="Nenhum dado disponível">
+                            <p:column headerText="#" style="width: 60px; text-align: center">
+                                <h:outputText value="#{relatorioBean.pacientesComMaisMedicamentos.indexOf(item) + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="Paciente">
+                                <h:outputText value="#{item[0]}" styleClass="font-bold"/>
+                            </p:column>
+
+                            <p:column headerText="Total" style="width: 100px; text-align: center">
+                                <p:badge value="#{item[1]}" severity="info" size="large"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </div>
+
+                <div class="p-col-12">
+                    <p:panel header="Todos os Pacientes - Total de Medicamentos Prescritos">
+                        <p:commandButton value="Atualizar"
+                                         icon="pi pi-refresh"
+                                         action="#{relatorioBean.carregarRelatorios}"
+                                         update="formRelatorios"
+                                         styleClass="p-mb-3"/>
+
+                        <p:dataTable value="#{relatorioBean.todosPacientesComTotal}"
+                                     var="item"
+                                     paginator="true"
+                                     rows="15"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="Nenhum dado disponível"
+                                     styleClass="table-responsive">
+
+                            <p:column headerText="Paciente" sortBy="#{item[0]}">
+                                <h:outputText value="#{item[0]}"/>
+                            </p:column>
+
+                            <p:column headerText="Total de Medicamentos Prescritos"
+                                      style="width: 250px; text-align: center"
+                                      sortBy="#{item[1]}">
+                                <p:badge value="#{item[1]}" severity="warning"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="title">Pacientes</ui:define>
+
+    <ui:define name="content">
+        <p:growl id="growl" showDetail="true" life="4000"/>
+
+        <h:form id="formPacientes">
+            <p:panel header="Gerenciamento de Pacientes">
+                <div class="p-mb-3">
+                    <p:commandButton value="Novo Paciente"
+                                     icon="pi pi-plus"
+                                     styleClass="ui-button-success"
+                                     oncomplete="PF('dlgPaciente').show()"
+                                     update=":formPacientes:dlgPacienteContent"
+                                     action="#{pacienteBean.novo}"/>
+                </div>
+
+                <p:panel header="Filtros" toggleable="true" collapsed="false" styleClass="p-mb-3">
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-5">
+                            <p:outputLabel for="filtroNome" value="Nome:"/>
+                            <p:inputText id="filtroNome" value="#{pacienteBean.filtroNome}"/>
+                        </div>
+                        <div class="p-field p-col-12 p-md-4">
+                            <p:outputLabel for="filtroCpf" value="CPF:"/>
+                            <p:inputMask id="filtroCpf" value="#{pacienteBean.filtroCpf}" mask="999.999.999-99"/>
+                        </div>
+                        <div class="p-field p-col-12 p-md-3">
+                            <p:outputLabel value=" "/>
+                            <div>
+                                <p:commandButton value="Pesquisar"
+                                                 icon="pi pi-search"
+                                                 action="#{pacienteBean.pesquisar}"
+                                                 process="@this filtroNome filtroCpf"
+                                                 update="tabelaPacientes"
+                                                 styleClass="p-mr-2"/>
+                                <p:commandButton value="Limpar"
+                                                 icon="pi pi-times"
+                                                 action="#{pacienteBean.limparFiltros}"
+                                                 process="@this"
+                                                 update="filtroNome filtroCpf tabelaPacientes"
+                                                 styleClass="ui-button-secondary"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:panel>
+
+                <p:dataTable id="tabelaPacientes"
+                             value="#{pacienteBean.lazyModel}"
+                             var="paciente"
+                             lazy="true"
+                             paginator="true"
+                             rows="10"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15,20"
+                             emptyMessage="Nenhum paciente encontrado"
+                             styleClass="table-responsive">
+
+                    <p:column headerText="Nome" sortBy="#{paciente.nome}">
+                        <h:outputText value="#{paciente.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="CPF" style="width: 150px">
+                        <h:outputText value="#{paciente.cpf}">
+                            <f:converter converterId="cpfConverter"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width: 150px; text-align: center">
+                        <p:commandButton icon="pi pi-pencil"
+                                         styleClass="ui-button-warning p-mr-2"
+                                         title="Editar"
+                                         process="@this"
+                                         update=":formPacientes:dlgPaciente"
+                                         oncomplete="PF('dlgPaciente').show()"
+                                         action="#{pacienteBean.editar}">
+                            <f:setPropertyActionListener target="#{pacienteBean.pacienteSelecionado}" value="#{paciente}"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="ui-button-danger"
+                                         title="Excluir"
+                                         process="@this"
+                                         oncomplete="PF('confirmDeletePaciente').show()">
+                            <f:setPropertyActionListener target="#{pacienteBean.pacienteSelecionado}" value="#{paciente}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+
+            <p:dialog id="dlgPaciente"
+                      header="#{pacienteBean.paciente.id == null ? 'Novo Paciente' : 'Editar Paciente'}"
+                      widgetVar="dlgPaciente"
+                      modal="true"
+                      responsive="true"
+                      width="500">
+                <p:outputPanel id="dlgPacienteContent">
+                    <div class="p-fluid">
+                        <div class="p-field">
+                            <p:outputLabel for="nome" value="Nome:"/>
+                            <p:inputText id="nome" value="#{pacienteBean.paciente.nome}" required="true"/>
+                        </div>
+
+                        <div class="p-field">
+                            <p:outputLabel for="cpf" value="CPF:"/>
+                            <p:inputMask id="cpf" value="#{pacienteBean.paciente.cpf}" mask="999.999.999-99" required="true">
+                                <f:converter converterId="cpfConverter"/>
+                            </p:inputMask>
+                        </div>
+                    </div>
+
+                    <div class="p-dialog-footer">
+                        <p:commandButton value="Cancelar"
+                                         icon="pi pi-times"
+                                         onclick="PF('dlgPaciente').hide()"
+                                         styleClass="ui-button-secondary"
+                                         type="button"/>
+                        <p:commandButton value="Salvar"
+                                         icon="pi pi-check"
+                                         action="#{pacienteBean.salvar}"
+                                         update=":formPacientes:tabelaPacientes :formPacientes:dlgPacienteContent"
+                                         oncomplete="if(!args.validationFailed) PF('dlgPaciente').hide()"/>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="confirmDeletePaciente"
+                             header="Confirmação"
+                             message="Deseja realmente excluir este paciente?"
+                             icon="pi pi-exclamation-triangle"
+                             appendTo="@(body)">
+                <p:commandButton value="Sim"
+                                 icon="pi pi-check"
+                                 action="#{pacienteBean.excluir}"
+                                 process="@this"
+                                 update="tabelaPacientes :growl"
+                                 oncomplete="PF('confirmDeletePaciente').hide()"/>
+                <p:commandButton value="Não"
+                                 icon="pi pi-times"
+                                 onclick="PF('confirmDeletePaciente').hide()"
+                                 type="button"
+                                 styleClass="ui-button-secondary"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

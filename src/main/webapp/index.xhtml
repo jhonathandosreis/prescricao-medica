@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="title">Início - Sistema de Prescrição Médica</ui:define>
+
+    <ui:define name="content">
+        <div class="home-container">
+            <div class="welcome-section">
+                <h1><i class="pi pi-heart-fill"></i> Sistema de Prescrição Médica</h1>
+                <p>Gerencie pacientes, medicamentos e receitas médicas de forma simples e eficiente</p>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h:link outcome="/pages/pacientes">
+                        <div class="card-icon pacientes">
+                            <i class="pi pi-users"></i>
+                        </div>
+                        <h3>Pacientes</h3>
+                        <p>Cadastre e gerencie pacientes</p>
+                    </h:link>
+                </div>
+
+                <div class="dashboard-card">
+                    <h:link outcome="/pages/medicamentos">
+                        <div class="card-icon medicamentos">
+                            <i class="pi pi-box"></i>
+                        </div>
+                        <h3>Medicamentos</h3>
+                        <p>Cadastre e gerencie medicamentos</p>
+                    </h:link>
+                </div>
+
+                <div class="dashboard-card">
+                    <h:link outcome="/pages/receitas">
+                        <div class="card-icon receitas">
+                            <i class="pi pi-file-edit"></i>
+                        </div>
+                        <h3>Receitas</h3>
+                        <p>Prescreva medicamentos aos pacientes</p>
+                    </h:link>
+                </div>
+
+                <div class="dashboard-card">
+                    <h:link outcome="/pages/consultas">
+                        <div class="card-icon consultas">
+                            <i class="pi pi-search"></i>
+                        </div>
+                        <h3>Consultas</h3>
+                        <p>Pesquise receitas e medicamentos</p>
+                    </h:link>
+                </div>
+
+                <div class="dashboard-card">
+                    <h:link outcome="/pages/relatorios">
+                        <div class="card-icon relatorios">
+                            <i class="pi pi-chart-bar"></i>
+                        </div>
+                        <h3>Relatórios</h3>
+                        <p>Visualize estatísticas e relatórios</p>
+                    </h:link>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>
