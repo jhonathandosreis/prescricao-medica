@@ -10,7 +10,7 @@
 
 **Sistema web completo para gerenciamento de prescrições médicas desenvolvido com JavaEE**
 
-[Sobre](#-sobre) • [Funcionalidades](#-funcionalidades) • [Arquitetura](#-arquitetura)
+[Sobre](#-sobre) • [Funcionalidades](#-funcionalidades) • [Screenshots](#-screenshots) • [Arquitetura](#-arquitetura)
 
 </div>
 
@@ -31,53 +31,100 @@ Facilitar o gerenciamento de prescrições médicas através de uma interface in
 
 ---
 
+## 📸 Screenshots
+
+<div align="center">
+
+### 🏠 Página Inicial
+<img src="https://i.ibb.co/39D0dw5G/home.png" alt="Página Inicial" width="800"/>
+
+---
+
+### 👥 Gerenciamento de Pacientes
+<img src="https://i.ibb.co/FbqL4NzQ/pacientes.png" alt="Gerenciamento de Pacientes" width="800"/>
+
+---
+
+### 💊 Cadastro de Medicamentos
+<img src="https://i.ibb.co/WWdpPSCD/medicamento.png" alt="Cadastro de Medicamentos" width="800"/>
+
+---
+
+### 📋 Gestão de Receitas
+<img src="https://i.ibb.co/pvLsdqzx/receitas.png" alt="Gestão de Receitas" width="800"/>
+
+---
+
+### 🔍 Sistema de Consultas
+<img src="https://i.ibb.co/QFWDmYpS/consultas.png" alt="Sistema de Consultas" width="800"/>
+
+---
+
+### 📊 Relatórios e Estatísticas
+<img src="https://i.ibb.co/jk2HgRKf/relatorios.png" alt="Relatórios e Estatísticas" width="800"/>
+
+</div>
+
+---
+
 ## ✨ Funcionalidades
 
 ### 🏥 Gestão de Pacientes
 
-- CRUD completo (Create, Read, Update, Delete)
-- Validação de CPF com máscara automática
-- Busca por nome e CPF
-- Paginação com lazy loading
-- Validação de CPF único no sistema
+- ✅ CRUD completo (Create, Read, Update, Delete)
+- ✅ Validação de CPF com máscara automática
+- ✅ Busca por nome e CPF
+- ✅ Paginação com lazy loading
+- ✅ Validação de CPF único no sistema
 
 ### 💊 Gestão de Medicamentos
 
-- CRUD completo
-- Cadastro com nome e descrição
-- Busca por nome com filtros
-- Paginação server-side
-- Base com 100+ medicamentos pré-cadastrados
+- ✅ CRUD completo
+- ✅ Cadastro com nome e descrição
+- ✅ Busca por nome com filtros
+- ✅ Paginação server-side
+- ✅ Base com 100+ medicamentos pré-cadastrados
 
 ### 📝 Gestão de Receitas
 
-- Associação de múltiplos medicamentos por receita
-- Seleção de paciente via dropdown
-- Adição/remoção dinâmica de medicamentos
-- Campo de posologia para cada medicamento
-- Visualização detalhada de receitas
-- Data automática de prescrição
+- ✅ Associação de múltiplos medicamentos por receita
+- ✅ Seleção de paciente via dropdown
+- ✅ Adição/remoção dinâmica de medicamentos
+- ✅ Campo de posologia para cada medicamento
+- ✅ Visualização detalhada de receitas
+- ✅ Data automática de prescrição
 
 ### 🔍 Consultas Avançadas
 
-- Filtro por paciente
-- Filtro por medicamento
-- Filtros combinados
-- Exibição de total de medicamentos por receita
-- Badges visuais para quantidade
-- Paginação com lazy loading
+- ✅ Filtro por paciente
+- ✅ Filtro por medicamento
+- ✅ Filtros combinados
+- ✅ Exibição de total de medicamentos por receita
+- ✅ Badges visuais para quantidade
+- ✅ Paginação com lazy loading
 
 ### 📊 Relatórios Estatísticos
 
-- Top 2 medicamentos mais prescritos
-- Top 2 pacientes com mais medicamentos
-- Lista completa de pacientes com totais
-- Exportação para Excel (.xlsx)
-- Exportação para PDF
-- Formatação profissional dos relatórios
-- Atualização em tempo real
+- ✅ Top 2 medicamentos mais prescritos
+- ✅ Top 2 pacientes com mais medicamentos
+- ✅ Lista completa de pacientes com totais
+- ✅ Exportação para Excel (.xlsx)
+- ✅ Exportação para PDF
+- ✅ Formatação profissional dos relatórios
+- ✅ Atualização em tempo real
 
 ---
+
+## 🛠 Tecnologias
+
+### Stack Principal
+
+- **JavaEE 8** - Plataforma enterprise
+- **JSF 2.3** - Framework MVC web
+- **PrimeFaces 15.0.8** - Biblioteca de componentes UI
+- **JPA/Hibernate** - ORM e persistência
+- **PostgreSQL 13+** - Banco de dados relacional
+- **WildFly 26+** - Servidor de aplicação
 
 ### Bibliotecas Adicionais
 
@@ -95,7 +142,106 @@ Facilitar o gerenciamento de prescrições médicas através de uma interface in
 
 O sistema segue o padrão de arquitetura em camadas (Layered Architecture), garantindo separação de responsabilidades e manutenibilidade:
 
+### 📂 Estrutura do Projeto
+
+```
+src/main/
+├── 📁 java/
+│   └── 📁 com/
+│       └── 📁 dev/
+│           └── 📁 prescricaomedica/
+│               ├── 📁 bean/
+│               │   ├── MedicamentoBean.java
+│               │   ├── PacienteBean.java
+│               │   ├── ReceitaBean.java
+│               │   └── RelatorioBean.java
+│               │
+│               ├── 📁 converter/
+│               │   └── UUIDConverter.java
+│               │
+│               ├── 📁 dao/
+│               │   ├── GenericDAO.java
+│               │   ├── MedicamentoDAO.java
+│               │   ├── MedicamentoReceitadoDAO.java
+│               │   ├── PacienteDAO.java
+│               │   └── ReceitaDAO.java
+│               │
+│               ├── 📁 model/
+│               │   ├── Medicamento.java
+│               │   ├── MedicamentoReceitado.java
+│               │   ├── Paciente.java
+│               │   └── Receita.java
+│               │
+│               ├── 📁 service/
+│               │   ├── MedicamentoService.java
+│               │   ├── PacienteService.java
+│               │   ├── ReceitaService.java
+│               │   └── RelatorioService.java
+│               │
+│               └── 📁 util/
+│                   ├── CpfConverter.java
+│                   ├── LocalDateConverter.java
+│                   └── RelatorioExporter.java
+│
+├── 📁 resources/
+│   └── 📁 META-INF/
+│       ├── beans.xml
+│       └── persistence.xml
+│
+└── 📁 webapp/
+    ├── 📁 pages/
+    │   ├── consultas.xhtml
+    │   ├── medicamentos.xhtml
+    │   ├── pacientes.xhtml
+    │   ├── receitas.xhtml
+    │   └── relatorios.xhtml
+    │
+    ├── 📁 resources/
+    │   └── 📁 css/
+    │       └── styles.css
+    │
+    ├── 📁 templates/
+    │   └── template.xhtml
+    │
+    ├── 📁 WEB-INF/
+    │   ├── beans.xml
+    │   ├── faces-config.xml
+    │   └── web.xml
+    │
+    └── index.xhtml
+```
+
+### 🔧 Camadas da Aplicação
+
+- **Presentation Layer** (`bean/` + `pages/`)
+  - Managed Beans para controle de telas
+  - Views XHTML com PrimeFaces
+  - Conversores para formatação de dados
+
+- **Business Layer** (`service/`)
+  - Regras de negócio
+  - Validações complexas
+  - Coordenação entre DAOs
+
+- **Persistence Layer** (`dao/` + `model/`)
+  - Entidades JPA mapeadas
+  - DAOs com operações CRUD
+  - Queries personalizadas
+
+- **Cross-Cutting** (`util/`)
+  - Classes utilitárias
+  - Helpers e ferramentas comuns
+
 ---
+
+## 🚀 Instalação e Configuração
+
+### Pré-requisitos
+
+- Java 8 ou superior
+- Maven 3.6+
+- PostgreSQL 13+
+- WildFly 26+
 
 ### Passo a Passo
 
@@ -161,3 +307,11 @@ http://localhost:8080/prescricao-medica/
 ## 👨‍💻 Autor
 
 Desenvolvido como teste técnico para demonstração de conhecimentos em JavaEE.
+
+---
+
+<div align="center">
+  
+**Obrigado por conferir este projeto!**
+
+</div>
