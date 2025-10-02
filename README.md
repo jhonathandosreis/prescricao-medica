@@ -122,7 +122,6 @@ Facilitar o gerenciamento de prescrições médicas através de uma interface in
 - **JavaEE 8** - Plataforma enterprise
 - **JSF 2.3** - Framework MVC web
 - **PrimeFaces 15.0.8** - Biblioteca de componentes UI
-- **JPA/Hibernate** - ORM e persistência
 - **PostgreSQL 13+** - Banco de dados relacional
 - **WildFly 26+** - Servidor de aplicação
 
